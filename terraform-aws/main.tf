@@ -11,8 +11,7 @@ module "images-aws" {
 }
 
 module "network-aws" {
-  //source           = "git@github.com:hashicorp-modules/network-aws.git?ref=2017-05-31"
-  source           = "../../../modules/network-aws"
+  source           = "git@github.com:hashicorp-modules/network-aws.git?ref=2017-05-31"
   environment_name = "${random_id.environment_name.hex}"
   os               = "${var.os}"
   os_version       = "${var.os_version}"
@@ -39,8 +38,7 @@ module "consul-aws" {
 }
 
 module "nomad-aws-server" {
-  //source              = "git@github.com:hashicorp-modules/nomad-aws.git?ref=2017-06-02"
-  source              = "../../../modules/nomad-aws"
+  source              = "git@github.com:hashicorp-modules/nomad-aws.git?ref=2017-06-02"
   cluster_name        = "${random_id.environment_name.hex}-nomad-SERVER-asg"
   cluster_size        = "${var.cluster_size}"
   consul_server_sg_id = "${module.consul-aws.consul_server_sg_id}"
@@ -62,8 +60,7 @@ module "nomad-aws-server" {
 }
 
 module "nomad-aws-client" {
-  //source              = "git@github.com:hashicorp-modules/nomad-aws.git?ref=2017-06-02"
-  source              = "../../../modules/nomad-aws"
+  source              = "git@github.com:hashicorp-modules/nomad-aws.git?ref=2017-06-02"
   cluster_name        = "${random_id.environment_name.hex}-nomad-CLIENT-asg"
   cluster_size        = "${var.cluster_size}"
   consul_server_sg_id = "${module.consul-aws.consul_server_sg_id}"
@@ -110,7 +107,6 @@ resource "aws_instance" "control" {
     propagate_at_launch = true
   }
 
-  //iam_instance_profile = "${aws_iam_instance_profile.instance_profile.name}"
   iam_instance_profile = "${module.nomad-aws-server.instance_profile}"
 }
 
@@ -119,7 +115,7 @@ resource "aws_security_group" "control_sg" {
   description = "Security Group for Nomad Control Server"
   vpc_id      = "${module.network-aws.vpc_id}"
   tags {
-    Name         = "Nomad Control Server"
+    Name         = "Nomad Control Server SG"
   }
   ingress {
     from_port   = 22
@@ -149,6 +145,7 @@ resource "aws_security_group" "control_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  #Used for HDFS communication
   ingress {
     from_port   = 8020
     to_port     = 8020
