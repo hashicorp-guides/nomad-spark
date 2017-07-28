@@ -2,7 +2,7 @@ data "terraform_remote_state" "nomad" {
   backend = "local"
 
   config {
-    path = "${path.module}/../../nomad/terraform-aws/terraform.tfstate"
+    path = "${path.module}/../nomad/nomad.tfstate"
   }
 }
 
