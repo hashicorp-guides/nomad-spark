@@ -45,7 +45,7 @@ variable "nomad_version" {
 }
 
 variable "instance_type" {
-  default     = "m4.large"
+  default     = "t2.micro"
   description = "AWS instance type to use eg m4.large"
 }
 
@@ -70,6 +70,7 @@ variable "custom_user_init" {
   description = "Custom user script"
 }
 
+/*
 # Outputs
 output "bastion_ips_public" {
   value = ["${module.network-aws.bastion_ips_public}"]
@@ -87,15 +88,14 @@ output "consul_server_sg_id" {
   value = "${module.consul-aws.consul_server_sg_id}"
 }
 
-/*
 output "nomad_asg_id" {
   value = "${module.nomad-aws.asg_id}"
 }
-*/
 
 output "ssh_key_name" {
   value = "${module.ssh-keypair-aws.ssh_key_name}"
 }
+*/
 
 output "control_node_public_ip" {
   value =  "${aws_instance.control.public_ip}"
