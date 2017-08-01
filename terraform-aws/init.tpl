@@ -41,7 +41,7 @@ echo "127.0.0.1 $(hostname)" | sudo tee --append /etc/hosts
 # start consul and nomad once they are configured correctly
 systemctl start consul
 #systemctl start nomad
- systemctl start docker
+systemctl start docker
 
 DOCKER_BRIDGE_IP_ADDRESS=(`ifconfig docker0 2>/dev/null|awk '/inet/ {print $2}'|sed 's/addr://'`)
 echo "nameserver $DOCKER_BRIDGE_IP_ADDRESS" | sudo tee /etc/resolv.conf.new
@@ -49,16 +49,14 @@ cat /etc/resolv.conf | sudo tee --append /etc/resolv.conf.new
 sudo mv /etc/resolv.conf.new /etc/resolv.conf
 systemctl restart dnsmasq
 
-HADOOP_VERSION=2.7.3
-
 ## Download and unpack spark
 sudo wget -P /ops/examples/spark https://s3.amazonaws.com/nomad-spark/spark-2.1.0-bin-nomad.tgz
 sudo tar -xvf /ops/examples/spark/spark-2.1.0-bin-nomad.tgz --directory /ops/examples/spark
 sudo mv /ops/examples/spark/spark-2.1.0-bin-nomad /usr/local/bin/spark
 sudo chown -R root:root /usr/local/bin/spark
 
-#HDFS
 export HADOOP_VERSION=2.7.3
+#HDFS
 wget -O - http://apache.mirror.iphh.net/hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz | sudo tar xz -C /usr/local
 
 #Configure Hadoop CLI

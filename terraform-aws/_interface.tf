@@ -29,18 +29,8 @@ variable "nomad_as_server" {
   description = "Run the nomad agent in server mode: true/false"
 }
 
-variable "nomad_as_client_group2" {
-  default     = "true"
-  description = "Run the nomad agent in client mode: true/false"
-}
-
-variable "nomad_as_server_group2" {
-  default     = "false"
-  description = "Run the nomad agent in server mode: true/false"
-}
-
 variable "nomad_version" {
-  default     = "0.5.6"
+  default     = "0.6.0"
   description = "Nomad Agent version to use ie 0.5.6"
 }
 
@@ -65,39 +55,12 @@ variable "region" {
   description = "Region to deploy nomad cluster ie us-west-1"
 }
 
-variable "custom_user_init" {
-  default     = ""
-  description = "Custom user script"
-}
-
-/*
 # Outputs
-output "bastion_ips_public" {
-  value = ["${module.network-aws.bastion_ips_public}"]
-}
-
-output "consul_asg_id" {
-  value = "${module.consul-aws.asg_id}"
-}
-
-output "consul_client_sg_id" {
-  value = "${module.consul-aws.consul_client_sg_id}"
-}
-
-output "consul_server_sg_id" {
-  value = "${module.consul-aws.consul_server_sg_id}"
-}
-
-output "nomad_asg_id" {
-  value = "${module.nomad-aws.asg_id}"
+output "control_node_public_ip" {
+  value =  "${aws_instance.control.public_ip}"
 }
 
 output "ssh_key_name" {
-  value = "${module.ssh-keypair-aws.ssh_key_name}"
-}
-*/
-
-output "control_node_public_ip" {
-  value =  "${aws_instance.control.public_ip}"
+  value = "../nomad/${data.terraform_remote_state.nomad.ssh_key_name}.pem"
 }
 
