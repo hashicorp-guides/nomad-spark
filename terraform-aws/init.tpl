@@ -2,7 +2,7 @@
 
 instance_id="$(curl -s http://169.254.169.254/latest/meta-data/instance-id)"
 local_ipv4="$(curl -s http://169.254.169.254/latest/meta-data/local-ipv4)"
-new_hostname="nomad-$${instance_id}"
+new_hostname="nomad-control-$${instance_id}"
 
 # stop consul and nomad so they can be configured correctly
 systemctl stop nomad
@@ -137,7 +137,7 @@ echo 'job "hdfs" {
       operator  = "distinct_hosts"
       value     = "true"
     }
-    
+
     task "DataNode" {
 
       driver = "docker"
@@ -185,7 +185,7 @@ echo 'job "spark-history-server" {
 
     task "history-server" {
       driver = "docker"
-      
+
       config {
         image = "barnardb/spark"
         command = "/spark/spark-2.1.0-bin-nomad/bin/spark-class"
@@ -221,5 +221,3 @@ echo 'job "spark-history-server" {
 
   }
 }' | tee -a /home/$HOME_DIR/spark-history-server.nomad
-
-

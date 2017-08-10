@@ -7,7 +7,7 @@ data "terraform_remote_state" "nomad" {
 }
 
 module "images-aws" {
-  source        = "git@github.com:hashicorp-modules/images-aws.git?ref=2017-07-03"
+  source        = "git@github.com:hashicorp-modules/images-aws.gitref=2017-08-10"
   nomad_version = "${var.nomad_version}"
   os            = "${var.os}"
   os_version    = "${var.os_version}"
@@ -34,7 +34,7 @@ resource "aws_instance" "control" {
   count                  = "1"
   user_data              = "${data.template_file.user_data_control.rendered}"
   iam_instance_profile   = "${data.terraform_remote_state.nomad.iam_instance_profile_nomad_server}"
-  
+
   #Instance tags
   tags {
     Name                = "${format("%s Nomad Control Server",data.terraform_remote_state.nomad.random_id_environment_hex)}"
@@ -43,5 +43,3 @@ resource "aws_instance" "control" {
     propagate_at_launch = true
   }
 }
-
-
