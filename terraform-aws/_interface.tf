@@ -59,8 +59,3 @@ variable "region" {
 output "control_node_public_ip" {
   value =  "${aws_instance.control.public_ip}"
 }
-
-output "ssh_key_name" {
-  value = "../nomad/${data.terraform_remote_state.nomad.ssh_key_name}.pem"
-}
-

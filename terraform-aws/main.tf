@@ -6,11 +6,18 @@ data "terraform_remote_state" "nomad" {
   }
 }
 
-module "images-aws" {
-  source        = "git@github.com:hashicorp-modules/images-aws.gitref=2017-08-10"
-  nomad_version = "${var.nomad_version}"
-  os            = "${var.os}"
-  os_version    = "${var.os_version}"
+data "aws_ami" "control" {
+  most_recent = true
+  owners = ["self"]
+  filter {
+    name = "name"
+    values = ["production-nomad-server-0.6.0*-RHEL*"]
+  }
+}
+
+module "ssh-keypair-aws" {
+  source       = "github.com/hashicorp-modules/ssh-keypair-aws?ref=0.1.0"
+  ssh_key_name = "nomad_control_key"
 }
 
 data "template_file" "user_data_control" {
@@ -26,9 +33,9 @@ data "template_file" "user_data_control" {
 }
 
 resource "aws_instance" "control" {
-  ami                    = "${module.images-aws.nomad_image}"
+  ami                    = "${data.aws_ami.control.id}"
   instance_type          = "${var.instance_type}"
-  key_name               = "${data.terraform_remote_state.nomad.ssh_key_name}"
+  key_name               = "${module.ssh-keypair-aws.ssh_key_name}"
   vpc_security_group_ids = ["${data.terraform_remote_state.nomad.nomad_server_sg_id}"]
   subnet_id              = "${data.terraform_remote_state.nomad.subnet_public_ids.0}"
   count                  = "1"
